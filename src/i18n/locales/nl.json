@@ -117,8 +117,9 @@
     "tripPreview": "Rit Voorbeeld",
     "startDate": "Start Datum",
     "endDate": "Eind Datum",
-    "format": "Formaat",
+"format": "Formaat",
     "csvFormat": "CSV (Excel Compatibel)",
+    "excelFormat": "Excel (XLSX)",
     "exportButton": "Rapport Exporteren",
     "trips": "ritten",
     "stats": {

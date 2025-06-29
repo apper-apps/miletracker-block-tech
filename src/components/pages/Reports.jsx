@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { format, startOfMonth, endOfMonth } from 'date-fns'
-import { toast } from 'react-toastify'
-import { useTranslation } from 'react-i18next'
-import * as XLSX from 'xlsx'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Button from '@/components/atoms/Button'
-import Input from '@/components/atoms/Input'
-import Select from '@/components/atoms/Select'
-import Badge from '@/components/atoms/Badge'
-import ApperIcon from '@/components/ApperIcon'
-import { tripsService } from '@/services/api/tripsService'
-import { driversService } from '@/services/api/driversService'
-import { vehiclesService } from '@/services/api/vehiclesService'
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { endOfMonth, format, startOfMonth } from "date-fns";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import * as XLSX from "xlsx";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Select from "@/components/atoms/Select";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import FilterPanel from "@/components/molecules/FilterPanel";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import { tripsService } from "@/services/api/tripsService";
+import { vehiclesService } from "@/services/api/vehiclesService";
+import { driversService } from "@/services/api/driversService";
 const Reports = () => {
   const { t } = useTranslation()
   const [trips, setTrips] = useState([])
@@ -21,9 +22,12 @@ const Reports = () => {
   const [vehicles, setVehicles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filters, setFilters] = useState({
+const [filters, setFilters] = useState({
     startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
     endDate: format(endOfMonth(new Date()), 'yyyy-MM-dd'),
+    driverId: '',
+    vehicleId: '',
+    category: '',
     format: 'csv'
   })
 
@@ -54,12 +58,39 @@ const Reports = () => {
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }))
+}
+
+  const handleClearFilters = () => {
+    setFilters({
+      startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
+      endDate: format(endOfMonth(new Date()), 'yyyy-MM-dd'),
+      driverId: '',
+      vehicleId: '',
+      category: '',
+      format: 'csv'
+    })
   }
 
-  // Filter trips based on date range
+  // Filter trips based on all criteria
   const filteredTrips = trips.filter(trip => {
-    return trip.date >= filters.startDate && trip.date <= filters.endDate
+    const matchesDateRange = trip.date >= filters.startDate && trip.date <= filters.endDate
+    const matchesDriver = !filters.driverId || trip.driver_id === parseInt(filters.driverId)
+    const matchesVehicle = !filters.vehicleId || trip.vehicle_id === parseInt(filters.vehicleId)
+    const matchesCategory = !filters.category || trip.category === filters.category
+    
+    return matchesDateRange && matchesDriver && matchesVehicle && matchesCategory
   })
+
+  // Prepare driver and vehicle options for filter
+  const driverOptions = drivers.map(driver => ({
+    value: driver.Id.toString(),
+    label: driver.name
+  }))
+
+  const vehicleOptions = vehicles.map(vehicle => ({
+    value: vehicle.Id.toString(),
+    label: `${vehicle.make} ${vehicle.model} (${vehicle.license_plate})`
+  }))
 
   // Calculate summary statistics
   const summary = {
@@ -177,15 +208,23 @@ const handleExport = () => {
   if (error) return <Error message={error} onRetry={loadData} />
 
   return (
-    <div className="space-y-6">
+<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-<div>
+        <div>
           <h1 className="text-3xl font-bold text-primary-700">{t('reports.title')}</h1>
           <p className="text-gray-600">
             {t('reports.subtitle')}
           </p>
         </div>
       </div>
+      {/* Filter Panel */}
+      <FilterPanel
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+        driverOptions={driverOptions}
+        vehicleOptions={vehicleOptions}
+      />
 
       {/* Export Configuration */}
       <motion.div
@@ -193,27 +232,13 @@ const handleExport = () => {
         animate={{ opacity: 1, y: 0 }}
         className="card p-6"
       >
-<div className="flex items-center mb-4">
+        <div className="flex items-center mb-4">
           <ApperIcon name="Download" size={20} className="text-primary-500 mr-2" />
           <h3 className="text-lg font-semibold text-primary-500">{t('reports.exportConfig')}</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-<Input
-            type="date"
-            label={t('reports.startDate')}
-            value={filters.startDate}
-            onChange={(e) => handleFilterChange('startDate', e.target.value)}
-          />
-          
-          <Input
-            type="date"
-            label={t('reports.endDate')}
-            value={filters.endDate}
-            onChange={(e) => handleFilterChange('endDate', e.target.value)}
-          />
-          
-<Select
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <Select
             label={t('reports.format')}
             value={filters.format}
             onChange={(e) => handleFilterChange('format', e.target.value)}
@@ -222,12 +247,14 @@ const handleExport = () => {
               { value: 'excel', label: t('reports.excelFormat') }
             ]}
           />
-        </div>
-        
-<Button variant="primary" onClick={handleExport} className="w-full sm:w-auto">
-          <ApperIcon name="Download" size={16} className="mr-2" />
-          {t('reports.exportButton')} ({filteredTrips.length} {t('reports.trips')})
-        </Button>
+          
+          <div className="flex items-end">
+            <Button variant="primary" onClick={handleExport} className="w-full">
+              <ApperIcon name="Download" size={16} className="mr-2" />
+              {t('reports.exportButton')} ({filteredTrips.length} {t('reports.trips')})
+            </Button>
+          </div>
+</div>
       </motion.div>
 
       {/* Summary Statistics */}
@@ -236,8 +263,8 @@ const handleExport = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="card p-6"
-      >
-<div className="flex items-center mb-4">
+>
+        <div className="flex items-center mb-4">
           <ApperIcon name="BarChart3" size={20} className="text-primary-500 mr-2" />
           <h3 className="text-lg font-semibold text-primary-500">{t('reports.summary')}</h3>
           <span className="ml-2 text-sm text-gray-500">
@@ -249,8 +276,8 @@ const handleExport = () => {
           <div className="text-center">
             <div className="text-3xl font-bold text-primary-500 mb-1">
               {summary.totalTrips}
-            </div>
-<div className="text-sm text-gray-600">{t('reports.stats.totalTrips')}</div>
+</div>
+            <div className="text-sm text-gray-600">{t('reports.stats.totalTrips')}</div>
           </div>
           
           <div className="text-center">
@@ -283,8 +310,8 @@ const handleExport = () => {
         transition={{ delay: 0.2 }}
         className="card p-6"
       >
-        <div className="flex items-center justify-between mb-4">
-<div className="flex items-center">
+<div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
             <ApperIcon name="Eye" size={20} className="text-primary-500 mr-2" />
             <h3 className="text-lg font-semibold text-primary-500">{t('reports.tripPreview')}</h3>
           </div>
@@ -293,16 +320,16 @@ const handleExport = () => {
           </span>
         </div>
         
-        {filteredTrips.length === 0 ? (
-<div className="text-center py-8 text-gray-500">
+{filteredTrips.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
             {t('reports.noTripsInRange')}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
-                <tr>
-<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.date')}</th>
+<tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.date')}</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.driver')}</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.vehicle')}</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.route')}</th>
@@ -332,8 +359,8 @@ const handleExport = () => {
                       <td className="px-4 py-3 text-sm font-medium text-primary-500">
                         {trip.distance} km
                       </td>
-                      <td className="px-4 py-3">
-<Badge variant={trip.category}>
+<td className="px-4 py-3">
+                        <Badge variant={trip.category}>
                           {t(`trips.categories.${trip.category}`)}
                         </Badge>
                       </td>

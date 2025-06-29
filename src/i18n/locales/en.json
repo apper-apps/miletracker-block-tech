@@ -117,8 +117,9 @@
     "tripPreview": "Trip Preview",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "format": "Format",
+"format": "Format",
     "csvFormat": "CSV (Excel Compatible)",
+    "excelFormat": "Excel (XLSX)",
     "exportButton": "Export Report",
     "trips": "trips",
     "stats": {
