@@ -15,8 +15,8 @@ const Empty = ({
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center py-12"
     >
-      <div className="bg-gradient-to-br from-primary-100 to-accent-100 p-6 rounded-full mb-6">
-        <ApperIcon name={icon} size={48} className="text-primary-500" />
+<div className="bg-gradient-to-br from-primary-50 to-accent-50 p-6 rounded-full mb-6 border border-primary-100">
+        <ApperIcon name={icon} size={48} className="text-primary-600" />
       </div>
       
       <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>

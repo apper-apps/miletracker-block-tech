@@ -11,7 +11,7 @@ import Reports from '@/components/pages/Reports'
 
 function App() {
   return (
-    <Router>
+<Router>
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={<Layout />}>

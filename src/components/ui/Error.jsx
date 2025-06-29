@@ -10,8 +10,8 @@ const Error = ({ message = 'Something went wrong', onRetry }) => {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center py-12"
     >
-      <div className="bg-error/10 p-4 rounded-full mb-4">
-        <ApperIcon name="AlertTriangle" size={32} className="text-error" />
+<div className="bg-error-50 p-4 rounded-full mb-4 border border-error-100">
+        <ApperIcon name="AlertTriangle" size={32} className="text-error-500" />
       </div>
       
       <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>

@@ -97,10 +97,10 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-primary-500">Dashboard</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-primary-700">Dashboard</h1>
+          <p className="text-gray-500 mt-1">
             {format(currentMonth, 'MMMM yyyy')} Overview
           </p>
         </div>
@@ -132,8 +132,8 @@ const Dashboard = () => {
           transition={{ delay: 0.3 }}
           className="card p-6"
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-primary-500">Recent Trips</h3>
+<div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-primary-700">Recent Trips</h3>
             <Button variant="ghost" size="sm">
               <ApperIcon name="ExternalLink" size={16} className="mr-1" />
               View All
@@ -157,8 +157,8 @@ const Dashboard = () => {
                 const driver = data.drivers.find(d => d.Id === trip.driver_id)
                 const vehicle = data.vehicles.find(v => v.Id === trip.vehicle_id)
                 
-                return (
-                  <div key={trip.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+return (
+                  <div key={trip.Id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
                         <Badge variant={trip.category}>
@@ -193,18 +193,18 @@ const Dashboard = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
           className="card p-6"
-        >
-          <h3 className="text-lg font-semibold text-primary-500 mb-4">Quick Stats</h3>
+>
+          <h3 className="text-lg font-semibold text-primary-700 mb-6">Quick Stats</h3>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-success/10 p-2 rounded-lg mr-3">
-                  <ApperIcon name="Briefcase" size={16} className="text-success" />
+<div className="flex items-center">
+                <div className="bg-success-50 p-3 rounded-xl mr-4 border border-success-100">
+                  <ApperIcon name="Briefcase" size={16} className="text-success-600" />
                 </div>
                 <span className="text-sm font-medium text-gray-700">Business Trips</span>
-              </div>
-              <span className="text-lg font-bold text-success">
+</div>
+              <span className="text-lg font-bold text-success-600">
                 {currentMonthTrips.filter(t => t.category === 'business').length}
               </span>
             </div>

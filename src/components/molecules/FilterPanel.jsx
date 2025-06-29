@@ -24,8 +24,8 @@ const FilterPanel = ({
       className="card p-4 mb-6"
     >
       <div className="flex items-center mb-4">
-        <ApperIcon name="Filter" size={20} className="text-primary-500 mr-2" />
-        <h3 className="text-lg font-semibold text-primary-500">Filters</h3>
+<ApperIcon name="Filter" size={20} className="text-primary-600 mr-2" />
+        <h3 className="text-lg font-semibold text-primary-700">Filters</h3>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">

@@ -23,11 +23,11 @@ const Header = ({ onMenuClick }) => {
             </Button>
             
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-br from-primary-500 to-accent-500 p-2 rounded-xl">
-                <ApperIcon name="Car" className="text-white" size={24} />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-primary-500">MileTracker Pro</h1>
+<div className="bg-gradient-to-br from-primary-600 to-accent-500 p-2.5 rounded-xl shadow-soft">
+              <ApperIcon name="Car" className="text-white" size={24} />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-primary-700">MileTracker Pro</h1>
                 <p className="text-sm text-gray-500">Vehicle Mileage Management</p>
               </div>
             </div>
