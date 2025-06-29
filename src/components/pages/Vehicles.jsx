@@ -187,7 +187,7 @@ const handleExportCSV = () => {
   if (error) return <Error message={error} onRetry={loadVehicles} />
 
   return (
-    <div className="space-y-6">
+<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-primary-700">{t('vehicles.title')}</h1>
@@ -199,7 +199,7 @@ const handleExportCSV = () => {
           <Button 
             variant="secondary" 
             onClick={handleExportCSV}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap shadow-sm border border-gray-300 hover:shadow-md transition-shadow"
           >
             <ApperIcon name="Download" size={16} className="mr-2" />
             Export CSV
@@ -207,7 +207,7 @@ const handleExportCSV = () => {
           <Button 
             variant="secondary" 
             onClick={handleExportExcel}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap shadow-sm border border-gray-300 hover:shadow-md transition-shadow"
           >
             <ApperIcon name="FileSpreadsheet" size={16} className="mr-2" />
             Export Excel
@@ -215,7 +215,7 @@ const handleExportCSV = () => {
           <Button 
             variant="primary" 
             onClick={handleAddVehicle}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap shadow-md hover:shadow-lg transition-shadow"
           >
             <ApperIcon name="Plus" size={16} className="mr-2" />
             {t('vehicles.addVehicle')}
