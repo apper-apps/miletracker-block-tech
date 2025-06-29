@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import * as XLSX from 'xlsx'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
 import Button from '@/components/atoms/Button'
@@ -74,8 +75,8 @@ const Reports = () => {
       .reduce((sum, trip) => sum + trip.distance, 0)
   }
 
-  const handleExport = () => {
-if (filteredTrips.length === 0) {
+const handleExport = () => {
+    if (filteredTrips.length === 0) {
       toast.warning(t('messages.noTripsWarning'))
       return
     }
@@ -94,7 +95,7 @@ if (filteredTrips.length === 0) {
         'Notes'
       ]
 
-      const csvData = filteredTrips.map(trip => {
+      const exportData = filteredTrips.map(trip => {
         const driver = drivers.find(d => d.Id === trip.driver_id)
         const vehicle = vehicles.find(v => v.Id === trip.vehicle_id)
         
@@ -112,33 +113,61 @@ if (filteredTrips.length === 0) {
         ]
       })
 
-      // Add summary row
-      csvData.push([])
-      csvData.push(['SUMMARY'])
-      csvData.push(['Total Trips', summary.totalTrips])
-      csvData.push(['Total Distance (km)', summary.totalDistance.toFixed(2)])
-      csvData.push(['Business Trips', summary.businessTrips])
-      csvData.push(['Business Distance (km)', summary.businessDistance.toFixed(2)])
-      csvData.push(['Private Trips', summary.privateTrips])
-      csvData.push(['Private Distance (km)', summary.privateDistance.toFixed(2)])
+      // Add summary rows
+      exportData.push([])
+      exportData.push(['SUMMARY'])
+      exportData.push(['Total Trips', summary.totalTrips])
+      exportData.push(['Total Distance (km)', summary.totalDistance.toFixed(2)])
+      exportData.push(['Business Trips', summary.businessTrips])
+      exportData.push(['Business Distance (km)', summary.businessDistance.toFixed(2)])
+      exportData.push(['Private Trips', summary.privateTrips])
+      exportData.push(['Private Distance (km)', summary.privateDistance.toFixed(2)])
 
-      const csvContent = [headers, ...csvData]
-        .map(row => row.map(field => `"${field}"`).join(','))
-        .join('\n')
+      const fileName = `mileage-report-${filters.startDate}-to-${filters.endDate}`
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
+      if (filters.format === 'excel') {
+        // Create Excel workbook
+        const wb = XLSX.utils.book_new()
+        const wsData = [headers, ...exportData]
+        const ws = XLSX.utils.aoa_to_sheet(wsData)
+        
+        // Set column widths
+        const colWidths = [
+          { wch: 12 }, // Date
+          { wch: 8 },  // Time
+          { wch: 20 }, // Driver
+          { wch: 20 }, // Vehicle
+          { wch: 15 }, // License Plate
+          { wch: 30 }, // Start Location
+          { wch: 30 }, // End Location
+          { wch: 12 }, // Distance
+          { wch: 10 }, // Category
+          { wch: 30 }  // Notes
+        ]
+        ws['!cols'] = colWidths
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Mileage Report')
+        XLSX.writeFile(wb, `${fileName}.xlsx`)
+      } else {
+        // CSV export
+        const csvContent = [headers, ...exportData]
+          .map(row => row.map(field => `"${field}"`).join(','))
+          .join('\n')
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+        const link = document.createElement('a')
+        const url = URL.createObjectURL(blob)
+        
+        link.setAttribute('href', url)
+        link.setAttribute('download', `${fileName}.csv`)
+        link.style.visibility = 'hidden'
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
       
-      link.setAttribute('href', url)
-      link.setAttribute('download', `mileage-report-${filters.startDate}-to-${filters.endDate}.csv`)
-      link.style.visibility = 'hidden'
-      
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-toast.success(t('messages.reportExported'))
+      toast.success(t('messages.reportExported'))
     } catch (err) {
       toast.error(t('messages.exportError'))
     }
@@ -184,12 +213,13 @@ toast.success(t('messages.reportExported'))
             onChange={(e) => handleFilterChange('endDate', e.target.value)}
           />
           
-          <Select
+<Select
             label={t('reports.format')}
             value={filters.format}
             onChange={(e) => handleFilterChange('format', e.target.value)}
             options={[
-              { value: 'csv', label: t('reports.csvFormat') }
+              { value: 'csv', label: t('reports.csvFormat') },
+              { value: 'excel', label: t('reports.excelFormat') }
             ]}
           />
         </div>
