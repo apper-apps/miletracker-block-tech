@@ -144,10 +144,11 @@ toast.error(t('messages.deleteError'))
             <ApperIcon name="Download" size={16} className="mr-2" />
             Export CSV
           </Button>
-          <Button variant="primary" onClick={handleAddDriver}>
+<Button variant="primary" onClick={handleAddDriver}>
             <ApperIcon name="Plus" size={16} className="mr-2" />
             {t('drivers.addDriver')}
-</div>
+          </Button>
+        </div>
       </div>
 
       {drivers.length === 0 ? (

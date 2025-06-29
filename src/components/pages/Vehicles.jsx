@@ -81,9 +81,8 @@ if (window.confirm(t('messages.confirmDelete'))) {
         toast.success(t('messages.vehicleDeleted'))
       }
     } catch (err) {
-      toast.error(t('messages.deleteError'))
+toast.error(t('messages.deleteError'))
     }
-}
   }
 
   const handleExportCSV = () => {
