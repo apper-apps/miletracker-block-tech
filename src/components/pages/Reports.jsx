@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
 import Button from '@/components/atoms/Button'
@@ -12,8 +13,8 @@ import ApperIcon from '@/components/ApperIcon'
 import { tripsService } from '@/services/api/tripsService'
 import { driversService } from '@/services/api/driversService'
 import { vehiclesService } from '@/services/api/vehiclesService'
-
 const Reports = () => {
+  const { t } = useTranslation()
   const [trips, setTrips] = useState([])
   const [drivers, setDrivers] = useState([])
   const [vehicles, setVehicles] = useState([])
@@ -74,8 +75,8 @@ const Reports = () => {
   }
 
   const handleExport = () => {
-    if (filteredTrips.length === 0) {
-      toast.warning('No trips found for the selected date range.')
+if (filteredTrips.length === 0) {
+      toast.warning(t('messages.noTripsWarning'))
       return
     }
 
@@ -137,9 +138,9 @@ const Reports = () => {
       link.click()
       document.body.removeChild(link)
       
-      toast.success('Report exported successfully!')
+toast.success(t('messages.reportExported'))
     } catch (err) {
-      toast.error('Failed to export report. Please try again.')
+      toast.error(t('messages.exportError'))
     }
   }
 
@@ -150,9 +151,9 @@ const Reports = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 <div>
-          <h1 className="text-3xl font-bold text-primary-700">Reports</h1>
+          <h1 className="text-3xl font-bold text-primary-700">{t('reports.title')}</h1>
           <p className="text-gray-600">
-            Export trip data and view summary statistics
+            {t('reports.subtitle')}
           </p>
         </div>
       </div>
@@ -163,39 +164,39 @@ const Reports = () => {
         animate={{ opacity: 1, y: 0 }}
         className="card p-6"
       >
-        <div className="flex items-center mb-4">
+<div className="flex items-center mb-4">
           <ApperIcon name="Download" size={20} className="text-primary-500 mr-2" />
-          <h3 className="text-lg font-semibold text-primary-500">Export Configuration</h3>
+          <h3 className="text-lg font-semibold text-primary-500">{t('reports.exportConfig')}</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Input
+<Input
             type="date"
-            label="Start Date"
+            label={t('reports.startDate')}
             value={filters.startDate}
             onChange={(e) => handleFilterChange('startDate', e.target.value)}
           />
           
           <Input
             type="date"
-            label="End Date"
+            label={t('reports.endDate')}
             value={filters.endDate}
             onChange={(e) => handleFilterChange('endDate', e.target.value)}
           />
           
           <Select
-            label="Format"
+            label={t('reports.format')}
             value={filters.format}
             onChange={(e) => handleFilterChange('format', e.target.value)}
             options={[
-              { value: 'csv', label: 'CSV (Excel Compatible)' }
+              { value: 'csv', label: t('reports.csvFormat') }
             ]}
           />
         </div>
         
-        <Button variant="primary" onClick={handleExport} className="w-full sm:w-auto">
+<Button variant="primary" onClick={handleExport} className="w-full sm:w-auto">
           <ApperIcon name="Download" size={16} className="mr-2" />
-          Export Report ({filteredTrips.length} trips)
+          {t('reports.exportButton')} ({filteredTrips.length} {t('reports.trips')})
         </Button>
       </motion.div>
 
@@ -206,9 +207,9 @@ const Reports = () => {
         transition={{ delay: 0.1 }}
         className="card p-6"
       >
-        <div className="flex items-center mb-4">
+<div className="flex items-center mb-4">
           <ApperIcon name="BarChart3" size={20} className="text-primary-500 mr-2" />
-          <h3 className="text-lg font-semibold text-primary-500">Summary Statistics</h3>
+          <h3 className="text-lg font-semibold text-primary-500">{t('reports.summary')}</h3>
           <span className="ml-2 text-sm text-gray-500">
             ({format(new Date(filters.startDate), 'MMM dd, yyyy')} - {format(new Date(filters.endDate), 'MMM dd, yyyy')})
           </span>
@@ -219,28 +220,28 @@ const Reports = () => {
             <div className="text-3xl font-bold text-primary-500 mb-1">
               {summary.totalTrips}
             </div>
-            <div className="text-sm text-gray-600">Total Trips</div>
+<div className="text-sm text-gray-600">{t('reports.stats.totalTrips')}</div>
           </div>
           
           <div className="text-center">
             <div className="text-3xl font-bold text-accent-500 mb-1">
               {summary.totalDistance.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-600">Total Distance (km)</div>
+            <div className="text-sm text-gray-600">{t('reports.stats.totalDistance')}</div>
           </div>
           
           <div className="text-center">
             <div className="text-3xl font-bold text-success mb-1">
               {summary.businessDistance.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-600">Business Distance (km)</div>
+            <div className="text-sm text-gray-600">{t('reports.stats.businessDistance')}</div>
           </div>
           
           <div className="text-center">
             <div className="text-3xl font-bold text-info mb-1">
               {summary.privateDistance.toFixed(1)}
             </div>
-            <div className="text-sm text-gray-600">Private Distance (km)</div>
+            <div className="text-sm text-gray-600">{t('reports.stats.privateDistance')}</div>
           </div>
         </div>
       </motion.div>
@@ -253,30 +254,30 @@ const Reports = () => {
         className="card p-6"
       >
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
+<div className="flex items-center">
             <ApperIcon name="Eye" size={20} className="text-primary-500 mr-2" />
-            <h3 className="text-lg font-semibold text-primary-500">Trip Preview</h3>
+            <h3 className="text-lg font-semibold text-primary-500">{t('reports.tripPreview')}</h3>
           </div>
           <span className="text-sm text-gray-500">
-            Showing {Math.min(10, filteredTrips.length)} of {filteredTrips.length} trips
+            {t('reports.showing')} {Math.min(10, filteredTrips.length)} {t('reports.of')} {filteredTrips.length} {t('reports.trips')}
           </span>
         </div>
         
         {filteredTrips.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No trips found for the selected date range.
+<div className="text-center py-8 text-gray-500">
+            {t('reports.noTripsInRange')}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Driver</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vehicle</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Route</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Distance</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+<th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.date')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.driver')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.vehicle')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.route')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.distance')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.category')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -302,8 +303,8 @@ const Reports = () => {
                         {trip.distance} km
                       </td>
                       <td className="px-4 py-3">
-                        <Badge variant={trip.category}>
-                          {trip.category}
+<Badge variant={trip.category}>
+                          {t(`trips.categories.${trip.category}`)}
                         </Badge>
                       </td>
                     </tr>

@@ -1,0 +1,166 @@
+{
+  "app": {
+    "title": "MileTracker Pro",
+    "subtitle": "Voertuig Kilometerstand Beheer"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "trips": "Ritten",
+    "drivers": "Chauffeurs",
+    "vehicles": "Voertuigen",
+    "reports": "Rapporten"
+  },
+  "common": {
+    "add": "Toevoegen",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "export": "Exporteren",
+    "loading": "Laden...",
+    "error": "Fout",
+    "success": "Succes",
+    "warning": "Waarschuwing",
+    "info": "Info",
+    "confirm": "Bevestigen",
+    "viewAll": "Alles bekijken",
+    "selectOption": "Selecteer een optie",
+    "noData": "Geen gegevens",
+    "actions": "Acties",
+    "retry": "Opnieuw proberen"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overzicht",
+    "addTrip": "Rit Toevoegen",
+    "stats": {
+      "totalTrips": "Totaal Ritten Deze Maand",
+      "totalDistance": "Totale Afstand",
+      "businessMiles": "Zakelijke Kilometers",
+      "activeVehicles": "Actieve Voertuigen"
+    },
+    "recentTrips": "Recente Ritten",
+    "quickStats": "Snelle Statistieken",
+    "businessTrips": "Zakelijke Ritten",
+    "privateTrips": "Privé Ritten",
+    "activeDrivers": "Actieve Chauffeurs",
+    "fleetSize": "Vloot Grootte",
+    "noTrips": {
+      "title": "Nog geen ritten",
+      "description": "Begin met het bijhouden van uw voertuig kilometerstand door uw eerste rit toe te voegen.",
+      "action": "Rit Toevoegen"
+    }
+  },
+  "trips": {
+    "title": "Ritten",
+    "subtitle": "Beheer en volg voertuig ritten",
+    "addTrip": "Rit Toevoegen",
+    "noTrips": {
+      "title": "Geen ritten gevonden",
+      "description": "Begin met het bijhouden van uw voertuig ritten door uw eerste rit toe te voegen of pas uw filters aan.",
+      "action": "Rit Toevoegen"
+    },
+    "table": {
+      "dateTime": "Datum & Tijd",
+      "driver": "Chauffeur",
+      "vehicle": "Voertuig",
+      "route": "Route",
+      "distance": "Afstand",
+      "category": "Categorie"
+    },
+    "categories": {
+      "business": "Zakelijk",
+      "private": "Privé"
+    }
+  },
+  "drivers": {
+    "title": "Chauffeurs",
+    "subtitle": "Beheer uw vloot chauffeurs",
+    "addDriver": "Chauffeur Toevoegen",
+    "noDrivers": {
+      "title": "Geen chauffeurs gevonden",
+      "description": "Voeg uw eerste chauffeur toe om uw vloot te gaan beheren.",
+      "action": "Chauffeur Toevoegen"
+    },
+    "table": {
+      "driver": "Chauffeur",
+      "email": "E-mail",
+      "licenseNumber": "Rijbewijs Nummer",
+      "created": "Aangemaakt"
+    }
+  },
+  "vehicles": {
+    "title": "Voertuigen",
+    "subtitle": "Beheer uw vloot voertuigen",
+    "addVehicle": "Voertuig Toevoegen",
+    "noVehicles": {
+      "title": "Geen voertuigen gevonden",
+      "description": "Voeg uw eerste voertuig toe om kilometerstand bij te houden.",
+      "action": "Voertuig Toevoegen"
+    },
+    "table": {
+      "vehicle": "Voertuig",
+      "licensePlate": "Kenteken",
+      "vin": "VIN",
+      "year": "Jaar",
+      "created": "Aangemaakt"
+    }
+  },
+  "reports": {
+    "title": "Rapporten",
+    "subtitle": "Exporteer rit gegevens en bekijk samenvattende statistieken",
+    "exportConfig": "Export Configuratie",
+    "summary": "Samenvattende Statistieken",
+    "tripPreview": "Rit Voorbeeld",
+    "startDate": "Start Datum",
+    "endDate": "Eind Datum",
+    "format": "Formaat",
+    "csvFormat": "CSV (Excel Compatibel)",
+    "exportButton": "Rapport Exporteren",
+    "trips": "ritten",
+    "stats": {
+      "totalTrips": "Totaal Ritten",
+      "totalDistance": "Totale Afstand (km)",
+      "businessDistance": "Zakelijke Afstand (km)",
+      "privateDistance": "Privé Afstand (km)"
+    },
+    "showing": "Toont",
+    "of": "van",
+    "noTripsInRange": "Geen ritten gevonden voor het geselecteerde datumbereik.",
+    "table": {
+      "date": "Datum",
+      "driver": "Chauffeur",
+      "vehicle": "Voertuig",
+      "route": "Route",
+      "distance": "Afstand",
+      "category": "Categorie"
+    }
+  },
+  "language": {
+    "dutch": "Nederlands",
+    "english": "English"
+  },
+  "messages": {
+    "tripAdded": "Rit succesvol toegevoegd!",
+    "tripUpdated": "Rit succesvol bijgewerkt!",
+    "tripDeleted": "Rit succesvol verwijderd!",
+    "driverAdded": "Chauffeur succesvol toegevoegd!",
+    "driverUpdated": "Chauffeur succesvol bijgewerkt!",
+    "driverDeleted": "Chauffeur succesvol verwijderd!",
+    "vehicleAdded": "Voertuig succesvol toegevoegd!",
+    "vehicleUpdated": "Voertuig succesvol bijgewerkt!",
+    "vehicleDeleted": "Voertuig succesvol verwijderd!",
+    "reportExported": "Rapport succesvol geëxporteerd!",
+    "loadError": "Laden van gegevens mislukt. Probeer het opnieuw.",
+    "saveError": "Opslaan mislukt. Probeer het opnieuw.",
+    "deleteError": "Verwijderen mislukt. Probeer het opnieuw.",
+    "exportError": "Exporteren mislukt. Probeer het opnieuw.",
+    "noTripsWarning": "Geen ritten gevonden voor het geselecteerde datumbereik.",
+    "cannotDeleteDriver": "Kan chauffeur met gekoppelde ritten niet verwijderen. Wijs eerst ritten opnieuw toe of verwijder ze.",
+    "cannotDeleteVehicle": "Kan voertuig met gekoppelde ritten niet verwijderen. Wijs eerst ritten opnieuw toe of verwijder ze.",
+    "confirmDelete": "Weet u zeker dat u dit wilt verwijderen?"
+  }
+}

@@ -8,7 +8,7 @@ import Trips from '@/components/pages/Trips'
 import Drivers from '@/components/pages/Drivers'
 import Vehicles from '@/components/pages/Vehicles'
 import Reports from '@/components/pages/Reports'
-
+import '@/i18n'
 function App() {
   return (
 <Router>

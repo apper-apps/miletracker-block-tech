@@ -1,9 +1,20 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import ApperIcon from '@/components/ApperIcon'
 import Button from '@/components/atoms/Button'
-
+import Select from '@/components/atoms/Select'
 const Header = ({ onMenuClick }) => {
+  const { t, i18n } = useTranslation()
+
+  const handleLanguageChange = (e) => {
+    i18n.changeLanguage(e.target.value)
+  }
+
+  const languageOptions = [
+    { value: 'nl', label: t('language.dutch') },
+    { value: 'en', label: t('language.english') }
+  ]
   return (
     <motion.header 
       initial={{ y: -10, opacity: 0 }}
@@ -26,17 +37,25 @@ const Header = ({ onMenuClick }) => {
 <div className="bg-gradient-to-br from-primary-600 to-accent-500 p-2.5 rounded-xl shadow-soft">
               <ApperIcon name="Car" className="text-white" size={24} />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-primary-700">MileTracker Pro</h1>
-                <p className="text-sm text-gray-500">Vehicle Mileage Management</p>
-              </div>
+<div>
+              <h1 className="text-xl font-bold text-primary-700">{t('app.title')}</h1>
+              <p className="text-sm text-gray-500">{t('app.subtitle')}</p>
+            </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+<div className="flex items-center space-x-4">
+            <div className="w-32">
+              <Select
+                value={i18n.language}
+                onChange={handleLanguageChange}
+                options={languageOptions}
+                className="text-sm"
+              />
+            </div>
             <div className="hidden sm:flex items-center text-sm text-gray-500">
               <ApperIcon name="Calendar" size={16} className="mr-1" />
-              {new Date().toLocaleDateString('en-US', { 
+              {new Date().toLocaleDateString(i18n.language === 'nl' ? 'nl-NL' : 'en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 

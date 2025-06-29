@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import StatCard from '@/components/molecules/StatCard'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
@@ -11,8 +12,8 @@ import ApperIcon from '@/components/ApperIcon'
 import { tripsService } from '@/services/api/tripsService'
 import { driversService } from '@/services/api/driversService'
 import { vehiclesService } from '@/services/api/vehiclesService'
-
 const Dashboard = () => {
+  const { t } = useTranslation()
   const [data, setData] = useState({
     trips: [],
     drivers: [],
@@ -67,27 +68,27 @@ const Dashboard = () => {
     .sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time))
     .slice(0, 5)
 
-  const stats = [
+const stats = [
     {
-      title: 'Total Trips This Month',
+      title: t('dashboard.stats.totalTrips'),
       value: currentMonthTrips.length.toString(),
       icon: 'Route',
       color: 'primary'
     },
     {
-      title: 'Total Distance',
+      title: t('dashboard.stats.totalDistance'),
       value: `${totalDistance.toFixed(1)} km`,
       icon: 'Gauge',
       color: 'accent'
     },
     {
-      title: 'Business Miles',
+      title: t('dashboard.stats.businessMiles'),
       value: `${businessDistance.toFixed(1)} km`,
       icon: 'Briefcase',
       color: 'success'
     },
     {
-      title: 'Active Vehicles',
+      title: t('dashboard.stats.activeVehicles'),
       value: data.vehicles.length.toString(),
       icon: 'Car',
       color: 'info'
@@ -98,15 +99,15 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Header */}
 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-primary-700">Dashboard</h1>
+<div>
+          <h1 className="text-3xl font-bold text-primary-700">{t('dashboard.title')}</h1>
           <p className="text-gray-500 mt-1">
-            {format(currentMonth, 'MMMM yyyy')} Overview
+            {format(currentMonth, 'MMMM yyyy')} {t('dashboard.subtitle')}
           </p>
         </div>
         <Button variant="primary">
           <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add Trip
+          {t('dashboard.addTrip')}
         </Button>
       </div>
 
@@ -133,20 +134,20 @@ const Dashboard = () => {
           className="card p-6"
         >
 <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-primary-700">Recent Trips</h3>
+            <h3 className="text-lg font-semibold text-primary-700">{t('dashboard.recentTrips')}</h3>
             <Button variant="ghost" size="sm">
               <ApperIcon name="ExternalLink" size={16} className="mr-1" />
-              View All
+              {t('common.viewAll')}
             </Button>
           </div>
           
           {recentTrips.length === 0 ? (
-            <Empty 
-              title="No trips yet"
-              description="Start tracking your vehicle mileage by adding your first trip."
+<Empty 
+              title={t('dashboard.noTrips.title')}
+              description={t('dashboard.noTrips.description')}
               icon="Route"
               action={{
-                label: 'Add Trip',
+                label: t('dashboard.noTrips.action'),
                 icon: 'Plus',
                 onClick: () => {}
               }}
@@ -160,9 +161,9 @@ const Dashboard = () => {
 return (
                   <div key={trip.Id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
+<div className="flex items-center space-x-2 mb-1">
                         <Badge variant={trip.category}>
-                          {trip.category}
+                          {t(`trips.categories.${trip.category}`)}
                         </Badge>
                         <span className="text-sm text-gray-500">
                           {format(new Date(trip.date), 'MMM dd')}
@@ -194,7 +195,7 @@ return (
           transition={{ delay: 0.4 }}
           className="card p-6"
 >
-          <h3 className="text-lg font-semibold text-primary-700 mb-6">Quick Stats</h3>
+<h3 className="text-lg font-semibold text-primary-700 mb-6">{t('dashboard.quickStats')}</h3>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -202,7 +203,7 @@ return (
                 <div className="bg-success-50 p-3 rounded-xl mr-4 border border-success-100">
                   <ApperIcon name="Briefcase" size={16} className="text-success-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Business Trips</span>
+<span className="text-sm font-medium text-gray-700">{t('dashboard.businessTrips')}</span>
 </div>
               <span className="text-lg font-bold text-success-600">
                 {currentMonthTrips.filter(t => t.category === 'business').length}
@@ -214,7 +215,7 @@ return (
                 <div className="bg-info/10 p-2 rounded-lg mr-3">
                   <ApperIcon name="Home" size={16} className="text-info" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Private Trips</span>
+<span className="text-sm font-medium text-gray-700">{t('dashboard.privateTrips')}</span>
               </div>
               <span className="text-lg font-bold text-info">
                 {currentMonthTrips.filter(t => t.category === 'private').length}
@@ -226,7 +227,7 @@ return (
                 <div className="bg-primary-100 p-2 rounded-lg mr-3">
                   <ApperIcon name="Users" size={16} className="text-primary-500" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Active Drivers</span>
+<span className="text-sm font-medium text-gray-700">{t('dashboard.activeDrivers')}</span>
               </div>
               <span className="text-lg font-bold text-primary-500">
                 {data.drivers.length}
@@ -238,7 +239,7 @@ return (
                 <div className="bg-accent-100 p-2 rounded-lg mr-3">
                   <ApperIcon name="Car" size={16} className="text-accent-500" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">Fleet Size</span>
+<span className="text-sm font-medium text-gray-700">{t('dashboard.fleetSize')}</span>
               </div>
               <span className="text-lg font-bold text-accent-500">
                 {data.vehicles.length}

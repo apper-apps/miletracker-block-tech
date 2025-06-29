@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
 import Empty from '@/components/ui/Empty'
@@ -10,8 +11,8 @@ import ApperIcon from '@/components/ApperIcon'
 import DriverModal from '@/components/organisms/DriverModal'
 import { driversService } from '@/services/api/driversService'
 import { tripsService } from '@/services/api/tripsService'
-
 const Drivers = () => {
+  const { t } = useTranslation()
   const [drivers, setDrivers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -48,17 +49,17 @@ const Drivers = () => {
   const handleSaveDriver = async (driverData) => {
     try {
       if (editingDriver) {
-        const updatedDriver = await driversService.update(editingDriver.Id, driverData)
+const updatedDriver = await driversService.update(editingDriver.Id, driverData)
         setDrivers(prev => prev.map(driver => driver.Id === editingDriver.Id ? updatedDriver : driver))
-        toast.success('Driver updated successfully!')
+        toast.success(t('messages.driverUpdated'))
       } else {
         const newDriver = await driversService.create(driverData)
         setDrivers(prev => [...prev, newDriver])
-        toast.success('Driver added successfully!')
+        toast.success(t('messages.driverAdded'))
       }
       setShowModal(false)
-    } catch (err) {
-      toast.error('Failed to save driver. Please try again.')
+} catch (err) {
+      toast.error(t('messages.saveError'))
     }
   }
 
@@ -68,18 +69,18 @@ const Drivers = () => {
       const trips = await tripsService.getAll()
       const hasTrips = trips.some(trip => trip.driver_id === driverId)
       
-      if (hasTrips) {
-        toast.error('Cannot delete driver with associated trips. Please reassign or delete trips first.')
+if (hasTrips) {
+        toast.error(t('messages.cannotDeleteDriver'))
         return
       }
 
-      if (window.confirm('Are you sure you want to delete this driver?')) {
+if (window.confirm(t('messages.confirmDelete'))) {
         await driversService.delete(driverId)
         setDrivers(prev => prev.filter(driver => driver.Id !== driverId))
-        toast.success('Driver deleted successfully!')
+        toast.success(t('messages.driverDeleted'))
       }
     } catch (err) {
-      toast.error('Failed to delete driver. Please try again.')
+      toast.error(t('messages.deleteError'))
     }
   }
 
@@ -90,24 +91,24 @@ const Drivers = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 <div>
-          <h1 className="text-3xl font-bold text-primary-700">Drivers</h1>
+          <h1 className="text-3xl font-bold text-primary-700">{t('drivers.title')}</h1>
           <p className="text-gray-600">
-            Manage your fleet drivers
+            {t('drivers.subtitle')}
           </p>
         </div>
         <Button variant="primary" onClick={handleAddDriver}>
           <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add Driver
+          {t('drivers.addDriver')}
         </Button>
       </div>
 
       {drivers.length === 0 ? (
-        <Empty 
-          title="No drivers found"
-          description="Add your first driver to start managing your fleet."
+<Empty 
+          title={t('drivers.noDrivers.title')}
+          description={t('drivers.noDrivers.description')}
           icon="Users"
           action={{
-            label: 'Add Driver',
+            label: t('drivers.noDrivers.action'),
             icon: 'Plus',
             onClick: handleAddDriver
           }}
@@ -122,20 +123,20 @@ const Drivers = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Driver
+<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t('drivers.table.driver')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    {t('drivers.table.email')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    License Number
+                    {t('drivers.table.licenseNumber')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Created
+                    {t('drivers.table.created')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {t('common.actions')}
                   </th>
                 </tr>
               </thead>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 import FilterPanel from '@/components/molecules/FilterPanel'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
@@ -13,8 +14,8 @@ import TripModal from '@/components/organisms/TripModal'
 import { tripsService } from '@/services/api/tripsService'
 import { driversService } from '@/services/api/driversService'
 import { vehiclesService } from '@/services/api/vehiclesService'
-
 const Trips = () => {
+  const { t } = useTranslation()
   const [trips, setTrips] = useState([])
   const [drivers, setDrivers] = useState([])
   const [vehicles, setVehicles] = useState([])
@@ -82,28 +83,28 @@ const Trips = () => {
   const handleSaveTrip = async (tripData) => {
     try {
       if (editingTrip) {
-        const updatedTrip = await tripsService.update(editingTrip.Id, tripData)
+const updatedTrip = await tripsService.update(editingTrip.Id, tripData)
         setTrips(prev => prev.map(trip => trip.Id === editingTrip.Id ? updatedTrip : trip))
-        toast.success('Trip updated successfully!')
+        toast.success(t('messages.tripUpdated'))
       } else {
         const newTrip = await tripsService.create(tripData)
         setTrips(prev => [...prev, newTrip])
-        toast.success('Trip added successfully!')
+        toast.success(t('messages.tripAdded'))
       }
       setShowModal(false)
-    } catch (err) {
-      toast.error('Failed to save trip. Please try again.')
+} catch (err) {
+      toast.error(t('messages.saveError'))
     }
   }
 
   const handleDeleteTrip = async (tripId) => {
-    if (window.confirm('Are you sure you want to delete this trip?')) {
+if (window.confirm(t('messages.confirmDelete'))) {
       try {
         await tripsService.delete(tripId)
         setTrips(prev => prev.filter(trip => trip.Id !== tripId))
-        toast.success('Trip deleted successfully!')
+        toast.success(t('messages.tripDeleted'))
       } catch (err) {
-        toast.error('Failed to delete trip. Please try again.')
+        toast.error(t('messages.deleteError'))
       }
     }
   }
@@ -135,14 +136,14 @@ const Trips = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 <div>
-          <h1 className="text-3xl font-bold text-primary-700">Trips</h1>
+          <h1 className="text-3xl font-bold text-primary-700">{t('trips.title')}</h1>
           <p className="text-gray-600">
-            Manage and track vehicle trips
+            {t('trips.subtitle')}
           </p>
         </div>
         <Button variant="primary" onClick={handleAddTrip}>
           <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add Trip
+          {t('trips.addTrip')}
         </Button>
       </div>
 
@@ -155,12 +156,12 @@ const Trips = () => {
       />
 
       {filteredTrips.length === 0 ? (
-        <Empty 
-          title="No trips found"
-          description="Start tracking your vehicle trips by adding your first trip or adjust your filters."
+<Empty 
+          title={t('trips.noTrips.title')}
+          description={t('trips.noTrips.description')}
           icon="Route"
           action={{
-            label: 'Add Trip',
+            label: t('trips.noTrips.action'),
             icon: 'Plus',
             onClick: handleAddTrip
           }}
@@ -175,26 +176,26 @@ const Trips = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date & Time
+<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t('trips.table.dateTime')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Driver
+                    {t('trips.table.driver')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Vehicle
+                    {t('trips.table.vehicle')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Route
+                    {t('trips.table.route')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Distance
+                    {t('trips.table.distance')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
+                    {t('trips.table.category')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {t('common.actions')}
                   </th>
                 </tr>
               </thead>
@@ -238,8 +239,8 @@ const Trips = () => {
                         {trip.distance} km
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge variant={trip.category}>
-                          {trip.category}
+<Badge variant={trip.category}>
+                          {t(`trips.categories.${trip.category}`)}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
