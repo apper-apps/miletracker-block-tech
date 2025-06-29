@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "make": "Toyota",
+    "model": "Camry",
+    "year": 2022,
+    "license_plate": "ABC-123",
+    "vin": "1HGBH41JXMN109186",
+    "created_at": "2024-01-10T08:00:00Z",
+    "updated_at": "2024-01-10T08:00:00Z"
+  },
+  {
+    "Id": 2,
+    "make": "Ford",
+    "model": "F-150",
+    "year": 2023,
+    "license_plate": "XYZ-789",
+    "vin": "1FTFW1ET5DFC10312",
+    "created_at": "2024-01-12T11:30:00Z",
+    "updated_at": "2024-01-12T11:30:00Z"
+  },
+  {
+    "Id": 3,
+    "make": "Honda",
+    "model": "Accord",
+    "year": 2021,
+    "license_plate": "DEF-456",
+    "vin": "1HGCV1F30NA004352",
+    "created_at": "2024-01-25T13:20:00Z",
+    "updated_at": "2024-01-25T13:20:00Z"
+  },
+  {
+    "Id": 4,
+    "make": "Chevrolet",
+    "model": "Silverado",
+    "year": 2022,
+    "license_plate": "GHI-789",
+    "vin": "1GCRYDED5LZ123456",
+    "created_at": "2024-02-05T15:10:00Z",
+    "updated_at": "2024-02-05T15:10:00Z"
+  }
+]
