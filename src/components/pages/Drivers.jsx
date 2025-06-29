@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { format } from 'date-fns'
-import { toast } from 'react-toastify'
-import { useTranslation } from 'react-i18next'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Empty from '@/components/ui/Empty'
-import Button from '@/components/atoms/Button'
-import ApperIcon from '@/components/ApperIcon'
-import DriverModal from '@/components/organisms/DriverModal'
-import { driversService } from '@/services/api/driversService'
-import { tripsService } from '@/services/api/tripsService'
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import * as XLSX from "xlsx";
+import ApperIcon from "@/components/ApperIcon";
+import DriverModal from "@/components/organisms/DriverModal";
+import Button from "@/components/atoms/Button";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import { tripsService } from "@/services/api/tripsService";
+import { driversService } from "@/services/api/driversService";
 const Drivers = () => {
   const { t } = useTranslation()
   const [drivers, setDrivers] = useState([])
@@ -80,7 +81,49 @@ if (window.confirm(t('messages.confirmDelete'))) {
         toast.success(t('messages.driverDeleted'))
       }
     } catch (err) {
-      toast.error(t('messages.deleteError'))
+toast.error(t('messages.deleteError'))
+    }
+  }
+  const handleExportCSV = () => {
+    if (drivers.length === 0) {
+      toast.warning('No drivers to export')
+      return
+    }
+
+    try {
+      const headers = [
+        'Name',
+        'Email',
+        'License Number',
+        'Created Date'
+      ]
+
+      const exportData = drivers.map(driver => [
+        driver.name,
+        driver.email,
+        driver.license_number,
+        format(new Date(driver.created_at), 'MMM dd, yyyy')
+      ])
+
+      const csvContent = [headers, ...exportData]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n')
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      
+      link.setAttribute('href', url)
+      link.setAttribute('download', `drivers-export-${format(new Date(), 'yyyy-MM-dd')}.csv`)
+      link.style.visibility = 'hidden'
+      
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      toast.success('Drivers exported successfully!')
+    } catch (err) {
+      toast.error('Failed to export drivers. Please try again.')
     }
   }
 
@@ -90,20 +133,25 @@ if (window.confirm(t('messages.confirmDelete'))) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-<div>
+        <div>
           <h1 className="text-3xl font-bold text-primary-700">{t('drivers.title')}</h1>
           <p className="text-gray-600">
             {t('drivers.subtitle')}
           </p>
         </div>
-        <Button variant="primary" onClick={handleAddDriver}>
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          {t('drivers.addDriver')}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={handleExportCSV}>
+            <ApperIcon name="Download" size={16} className="mr-2" />
+            Export CSV
+          </Button>
+          <Button variant="primary" onClick={handleAddDriver}>
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            {t('drivers.addDriver')}
+</div>
       </div>
 
       {drivers.length === 0 ? (
-<Empty 
+        <Empty
           title={t('drivers.noDrivers.title')}
           description={t('drivers.noDrivers.description')}
           icon="Users"

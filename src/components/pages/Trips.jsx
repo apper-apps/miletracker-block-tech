@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import * as XLSX from 'xlsx'
 import FilterPanel from '@/components/molecules/FilterPanel'
 import Loading from '@/components/ui/Loading'
 import Error from '@/components/ui/Error'
@@ -127,7 +128,67 @@ if (window.confirm(t('messages.confirmDelete'))) {
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.Id.toString(),
     label: `${vehicle.make} ${vehicle.model} (${vehicle.license_plate})`
-  }))
+}))
+
+  const handleExportCSV = () => {
+    if (filteredTrips.length === 0) {
+      toast.warning('No trips to export')
+      return
+    }
+
+    try {
+      const headers = [
+        'Date',
+        'Time',
+        'Driver',
+        'Vehicle',
+        'License Plate',
+        'Start Location',
+        'End Location',
+        'Distance (km)',
+        'Category',
+        'Notes'
+      ]
+
+      const exportData = filteredTrips.map(trip => {
+        const driver = drivers.find(d => d.Id === trip.driver_id)
+        const vehicle = vehicles.find(v => v.Id === trip.vehicle_id)
+        
+        return [
+          trip.date,
+          trip.time,
+          driver?.name || 'Unknown',
+          `${vehicle?.make || ''} ${vehicle?.model || ''}`.trim() || 'Unknown',
+          vehicle?.license_plate || '',
+          trip.start_location,
+          trip.end_location,
+          trip.distance,
+          trip.category,
+          trip.notes || ''
+        ]
+      })
+
+      const csvContent = [headers, ...exportData]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n')
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      
+      link.setAttribute('href', url)
+      link.setAttribute('download', `trips-export-${format(new Date(), 'yyyy-MM-dd')}.csv`)
+      link.style.visibility = 'hidden'
+      
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      toast.success('Trips exported successfully!')
+    } catch (err) {
+      toast.error('Failed to export trips. Please try again.')
+    }
+  }
 
   if (loading) return <Loading type="table" />
   if (error) return <Error message={error} onRetry={loadData} />
@@ -135,16 +196,22 @@ if (window.confirm(t('messages.confirmDelete'))) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-<div>
+        <div>
           <h1 className="text-3xl font-bold text-primary-700">{t('trips.title')}</h1>
           <p className="text-gray-600">
             {t('trips.subtitle')}
           </p>
         </div>
-        <Button variant="primary" onClick={handleAddTrip}>
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          {t('trips.addTrip')}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" onClick={handleExportCSV}>
+            <ApperIcon name="Download" size={16} className="mr-2" />
+            Export CSV
+          </Button>
+          <Button variant="primary" onClick={handleAddTrip}>
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            {t('trips.addTrip')}
+          </Button>
+        </div>
       </div>
 
       <FilterPanel
