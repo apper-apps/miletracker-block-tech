@@ -85,7 +85,7 @@ toast.error(t('messages.deleteError'))
     }
   }
 
-  const handleExportCSV = () => {
+const handleExportCSV = () => {
     if (vehicles.length === 0) {
       toast.warning('No vehicles to export')
       return
@@ -126,7 +126,58 @@ toast.error(t('messages.deleteError'))
       link.click()
       document.body.removeChild(link)
       
-      toast.success('Vehicles exported successfully!')
+      toast.success('Vehicles exported as CSV successfully!')
+    } catch (err) {
+      toast.error('Failed to export vehicles. Please try again.')
+    }
+  }
+
+  const handleExportExcel = () => {
+    if (vehicles.length === 0) {
+      toast.warning('No vehicles to export')
+      return
+    }
+
+    try {
+      const headers = [
+        'Make',
+        'Model', 
+        'Year',
+        'License Plate',
+        'VIN',
+        'Created Date'
+      ]
+
+      const exportData = vehicles.map(vehicle => [
+        vehicle.make,
+        vehicle.model,
+        vehicle.year,
+        vehicle.license_plate,
+        vehicle.vin,
+        format(new Date(vehicle.created_at), 'MMM dd, yyyy')
+      ])
+
+      const worksheetData = [headers, ...exportData]
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData)
+      
+      // Set column widths
+      const columnWidths = [
+        { wch: 15 }, // Make
+        { wch: 15 }, // Model
+        { wch: 8 },  // Year
+        { wch: 15 }, // License Plate
+        { wch: 20 }, // VIN
+        { wch: 15 }  // Created Date
+      ]
+      worksheet['!cols'] = columnWidths
+
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Vehicles')
+      
+      const fileName = `vehicles-export-${format(new Date(), 'yyyy-MM-dd')}.xlsx`
+      XLSX.writeFile(workbook, fileName)
+      
+      toast.success('Vehicles exported as Excel successfully!')
     } catch (err) {
       toast.error('Failed to export vehicles. Please try again.')
     }
@@ -145,16 +196,22 @@ toast.error(t('messages.deleteError'))
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleExportCSV}>
-            <ApperIcon name="Download" size={16} className="mr-2" />
-            Export CSV
-          </Button>
+          <div className="relative">
+            <Button variant="secondary" onClick={handleExportCSV} className="mr-1">
+              <ApperIcon name="Download" size={16} className="mr-2" />
+              Export CSV
+            </Button>
+            <Button variant="secondary" onClick={handleExportExcel}>
+              <ApperIcon name="FileSpreadsheet" size={16} className="mr-2" />
+              Export Excel
+            </Button>
+          </div>
           <Button variant="primary" onClick={handleAddVehicle}>
             <ApperIcon name="Plus" size={16} className="mr-2" />
             {t('vehicles.addVehicle')}
           </Button>
         </div>
-</div>
+      </div>
 
         {vehicles.length === 0 ? (
           <Empty 
