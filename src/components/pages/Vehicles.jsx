@@ -193,18 +193,30 @@ const handleExportCSV = () => {
           <h1 className="text-3xl font-bold text-primary-700">{t('vehicles.title')}</h1>
           <p className="text-gray-600">
             {t('vehicles.subtitle')}
-          </p>
-</div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleExportCSV}>
+</p>
+        </div>
+        <div className="flex flex-wrap gap-2 items-center">
+          <Button 
+            variant="secondary" 
+            onClick={handleExportCSV}
+            className="whitespace-nowrap"
+          >
             <ApperIcon name="Download" size={16} className="mr-2" />
             Export CSV
           </Button>
-          <Button variant="secondary" onClick={handleExportExcel}>
+          <Button 
+            variant="secondary" 
+            onClick={handleExportExcel}
+            className="whitespace-nowrap"
+          >
             <ApperIcon name="FileSpreadsheet" size={16} className="mr-2" />
             Export Excel
           </Button>
-          <Button variant="primary" onClick={handleAddVehicle}>
+          <Button 
+            variant="primary" 
+            onClick={handleAddVehicle}
+            className="whitespace-nowrap"
+          >
             <ApperIcon name="Plus" size={16} className="mr-2" />
             {t('vehicles.addVehicle')}
           </Button>

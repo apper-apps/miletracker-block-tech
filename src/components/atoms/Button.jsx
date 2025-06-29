@@ -11,9 +11,9 @@ const Button = ({
   className = '',
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
+const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative z-10'
   
-const variants = {
+  const variants = {
     primary: 'bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500 shadow-card hover:shadow-card-hover active:scale-98 border border-transparent',
     secondary: 'bg-white hover:bg-gray-50 text-primary-600 border border-gray-200 focus:ring-primary-500 shadow-card hover:shadow-card-hover hover:border-gray-300 active:scale-98',
     accent: 'bg-accent-500 hover:bg-accent-600 text-white focus:ring-accent-500 shadow-card hover:shadow-card-hover active:scale-98 border border-transparent',

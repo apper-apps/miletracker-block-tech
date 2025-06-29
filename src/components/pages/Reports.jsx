@@ -218,8 +218,8 @@ if (loading) return <Loading />
           <p className="text-gray-600">
             {t('reports.subtitle')}
           </p>
-        </div>
-        <div className="flex gap-2">
+</div>
+        <div className="flex flex-wrap gap-2 items-center">
           <Select
             value={filters.format}
             onChange={(e) => handleFilterChange('format', e.target.value)}
@@ -229,12 +229,16 @@ if (loading) return <Loading />
             ]}
             className="min-w-[120px]"
           />
-          <Button variant="primary" onClick={handleExport}>
+          <Button 
+            variant="primary" 
+            onClick={handleExport}
+            className="whitespace-nowrap"
+          >
             <ApperIcon name="Download" size={16} className="mr-2" />
             {t('reports.exportButton')} ({filteredTrips.length})
           </Button>
         </div>
-</div>
+      </div>
       
       {/* Filter Panel */}
       <FilterPanel
