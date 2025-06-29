@@ -15,6 +15,9 @@ import Loading from "@/components/ui/Loading";
 import { tripsService } from "@/services/api/tripsService";
 import { vehiclesService } from "@/services/api/vehiclesService";
 import { driversService } from "@/services/api/driversService";
+import tripsData from "@/services/mockData/trips.json";
+import driversData from "@/services/mockData/drivers.json";
+import vehiclesData from "@/services/mockData/vehicles.json";
 const Reports = () => {
   const { t } = useTranslation()
   const [trips, setTrips] = useState([])
@@ -204,11 +207,11 @@ const handleExport = () => {
     }
   }
 
-  if (loading) return <Loading />
+if (loading) return <Loading />
   if (error) return <Error message={error} onRetry={loadData} />
 
   return (
-<div className="space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-primary-700">{t('reports.title')}</h1>
@@ -216,7 +219,23 @@ const handleExport = () => {
             {t('reports.subtitle')}
           </p>
         </div>
-      </div>
+        <div className="flex gap-2">
+          <Select
+            value={filters.format}
+            onChange={(e) => handleFilterChange('format', e.target.value)}
+            options={[
+              { value: 'csv', label: t('reports.csvFormat') },
+              { value: 'excel', label: t('reports.excelFormat') }
+            ]}
+            className="min-w-[120px]"
+          />
+          <Button variant="primary" onClick={handleExport}>
+            <ApperIcon name="Download" size={16} className="mr-2" />
+            {t('reports.exportButton')} ({filteredTrips.length})
+          </Button>
+        </div>
+</div>
+      
       {/* Filter Panel */}
       <FilterPanel
         filters={filters}
@@ -226,42 +245,10 @@ const handleExport = () => {
         vehicleOptions={vehicleOptions}
       />
 
-      {/* Export Configuration */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="card p-6"
-      >
-        <div className="flex items-center mb-4">
-          <ApperIcon name="Download" size={20} className="text-primary-500 mr-2" />
-          <h3 className="text-lg font-semibold text-primary-500">{t('reports.exportConfig')}</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <Select
-            label={t('reports.format')}
-            value={filters.format}
-            onChange={(e) => handleFilterChange('format', e.target.value)}
-            options={[
-              { value: 'csv', label: t('reports.csvFormat') },
-              { value: 'excel', label: t('reports.excelFormat') }
-            ]}
-          />
-          
-          <div className="flex items-end">
-            <Button variant="primary" onClick={handleExport} className="w-full">
-              <ApperIcon name="Download" size={16} className="mr-2" />
-              {t('reports.exportButton')} ({filteredTrips.length} {t('reports.trips')})
-            </Button>
-          </div>
-</div>
-      </motion.div>
-
       {/* Summary Statistics */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
         className="card p-6"
 >
         <div className="flex items-center mb-4">
@@ -302,15 +289,14 @@ const handleExport = () => {
           </div>
         </div>
       </motion.div>
-
-      {/* Trip Preview */}
+{/* Trip Preview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.1 }}
         className="card p-6"
       >
-<div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <ApperIcon name="Eye" size={20} className="text-primary-500 mr-2" />
             <h3 className="text-lg font-semibold text-primary-500">{t('reports.tripPreview')}</h3>
@@ -318,9 +304,9 @@ const handleExport = () => {
           <span className="text-sm text-gray-500">
             {t('reports.showing')} {Math.min(10, filteredTrips.length)} {t('reports.of')} {filteredTrips.length} {t('reports.trips')}
           </span>
-        </div>
+</div>
         
-{filteredTrips.length === 0 ? (
+        {filteredTrips.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             {t('reports.noTripsInRange')}
           </div>
@@ -328,7 +314,7 @@ const handleExport = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
-<tr>
+                <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.date')}</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.driver')}</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('reports.table.vehicle')}</th>
@@ -358,8 +344,8 @@ const handleExport = () => {
                       </td>
                       <td className="px-4 py-3 text-sm font-medium text-primary-500">
                         {trip.distance} km
-                      </td>
-<td className="px-4 py-3">
+</td>
+                      <td className="px-4 py-3">
                         <Badge variant={trip.category}>
                           {t(`trips.categories.${trip.category}`)}
                         </Badge>
