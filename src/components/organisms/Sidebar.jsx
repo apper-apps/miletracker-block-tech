@@ -14,17 +14,20 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Reports', href: '/reports', icon: 'FileText' },
   ]
 
-  const sidebarVariants = {
+const sidebarVariants = {
     open: { x: 0 },
     closed: { x: '-100%' }
   }
 
+  // Check if we're on mobile (below lg breakpoint)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024
+
   return (
     <motion.div
       initial={false}
-      animate={isOpen ? 'open' : 'closed'}
-      variants={sidebarVariants}
-      transition={{ type: 'tween', duration: 0.3 }}
+      animate={isMobile ? (isOpen ? 'open' : 'closed') : false}
+      variants={isMobile ? sidebarVariants : {}}
+      transition={isMobile ? { type: 'tween', duration: 0.3 } : {}}
       className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg lg:static lg:translate-x-0"
     >
       <div className="flex flex-col h-full">
